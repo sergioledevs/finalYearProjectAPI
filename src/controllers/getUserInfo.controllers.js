@@ -1,6 +1,6 @@
 const controller = {};
-const connection = require("../dbConnection/connection");
-const BookingModel = require("../models/reservas.model");
+const connection = require("../dbConnection/connection2");
+const BookingModel = require("../models/userInfo.model");
 
 controller.index = async (req, res) => {
   try {

@@ -1,12 +1,11 @@
 const controller = {};
 const connection = require("../dbConnection/connection");
-const BookingModel = require("../models/reservas.model");
+const BookingModel = require("../models/userInfo.model");
 
 controller.updateInfo = async (req, res) => {
   try {
-
     await BookingModel.findOneAndUpdate(
-      req.name,
+      { name: "David" },
       {
        name:"Antonio"
       }

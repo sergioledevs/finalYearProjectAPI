@@ -1,5 +1,5 @@
 {
-  "name": "calenar-bookings-node",
+  "name": "fitapp-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,6 +17,9 @@
     "@devexpress/dx-react-scheduler-material-ui": "^3.0.2",
     "express": "^4.17.2",
     "mongoose": "^6.1.7",
-    "pug": "^3.0.2"
+    "nodemon": "^2.0.18",
+    "pug": "^3.0.2",
+    "sneaks-api": "^1.2.3",
+    "x-ray": "^2.3.4"
   }
 }
