@@ -15,7 +15,7 @@ const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
 // Define the options for the auth() middleware function
 const jwtOptions = {
   audience: "https://finalyearprojectapi.onrender.com",
-  issuerBaseURL: "dev-s016gihn6cxe73pi.eu.auth0.com",
+  issuerBaseURL: "https://dev-s016gihn6cxe73pi.eu.auth0.com",
 };
 
 // Authorization middleware. When used, the Access Token must
