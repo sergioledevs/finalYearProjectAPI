@@ -23,6 +23,7 @@ const auth02 = new ManagementClient({
 router.patch('/api/user/:userId', async (req, res) => {
   const userId = req.params.userId;
   const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
+  console.log(req.params);
 
   try {
     // Update user profile in Auth0
