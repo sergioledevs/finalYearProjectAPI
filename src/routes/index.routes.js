@@ -38,23 +38,20 @@ router.post("/getDatabase", (req, res) => {
   });
 });
 
-const auth0Middleware = new auth0.ManagementClient({
+const auth0 = new ManagementClient({
   domain: 'dev-s016gihn6cxe73pi.eu.auth0.com',
   clientId: 't7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4',
   clientSecret: 'seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4',
   scope: 'sergiusgg01@gmail.com',
 });
 
-router.patch('/api/user/:userId', auth0Middleware, async (req, res) => {
+router.patch('/api/user/:userId', async (req, res) => {
   const userId = req.params.userId;
   const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
 
   try {
     // Update user profile in Auth0
-    await req.auth0.updateUser({
-      id: userId,
-      user_metadata: { weight, height, levelOfActivity, age, fitnessGoal },
-    });
+    await auth0.updateUserMetadata({ id: userId }, { weight, height, levelOfActivity, age, fitnessGoal });
 
     // Update user profile in database (if using one)
     // ...
