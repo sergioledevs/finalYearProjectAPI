@@ -2,38 +2,43 @@ const express = require("express");
 const { connection } = require("mongoose");
 const router = express.Router();
 const connections = require("../dbConnection/connection");
-const { ManagementClient } = require('auth0');
+const { ManagementClient } = require("auth0");
 
 const controllerIndex = require("../controllers/getUserInfo.controllers");
 const getRecipesIndex = require("../controllers/getRecipes.controllers");
-const getIngredientsIndex= require("../controllers/getIngredients.controller")
+const getIngredientsIndex = require("../controllers/getIngredients.controller");
 const UserInfoModel = require("../models/userInfo.model");
 const RecipesModel = require("../models/recipes.model");
 
-const { auth, requiredScopes } = require('express-oauth2-jwt-bearer');
+const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
 
 // Authorization middleware. When used, the Access Token must
 // exist and be verified against the Auth0 JSON Web Key Set.
 const checkJwt = auth({
-  audience: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/',
+  audience: "https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/",
   issuerBaseURL: `https://cukfit.netlify.app/`,
 });
+const checkScopes = requiredScopes("update:users_app_metadata");
 
 const auth02 = new ManagementClient({
-  domain: 'dev-s016gihn6cxe73pi.eu.auth0.com',
-  clientId: 't7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4',
-  clientSecret: 'seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4',
-  scope: 'sergiusgg01@gmail.com',
+  domain: "dev-s016gihn6cxe73pi.eu.auth0.com",
+  clientId: "t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4",
+  clientSecret:
+    "seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
+  scope: "sergiusgg01@gmail.com",
 });
 
-router.patch('/api/user/:userId', checkJwt, async (req, res) => {
+router.patch("/api/user/:userId", checkJwt, checkScopes, async (req, res) => {
   const userId = req.params.userId;
   const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
   console.log(req.params);
 
   try {
     // Update user profile in Auth0
-    await auth02.updateUserMetadata({ id: userId }, { weight, height, levelOfActivity, age, fitnessGoal });
+    await auth02.updateUserMetadata(
+      { id: userId },
+      { weight, height, levelOfActivity, age, fitnessGoal }
+    );
 
     // Update user profile in database (if using one)
     // ...
@@ -44,7 +49,6 @@ router.patch('/api/user/:userId', checkJwt, async (req, res) => {
     res.sendStatus(500);
   }
 });
-
 
 router.get("/getDatabase", controllerIndex.index);
 
