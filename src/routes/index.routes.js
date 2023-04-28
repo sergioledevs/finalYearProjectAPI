@@ -2,6 +2,7 @@ const express = require("express");
 const { connection } = require("mongoose");
 const router = express.Router();
 const connections = require("../dbConnection/connection");
+const auth0 = require('auth0');
 
 const controllerIndex = require("../controllers/getUserInfo.controllers");
 const getRecipesIndex = require("../controllers/getRecipes.controllers");
@@ -35,6 +36,34 @@ router.post("/getDatabase", (req, res) => {
     }
     return res.status(200).send({ booking: BookingStored });
   });
+});
+
+const auth0Middleware = auth0({
+  domain: 'dev-s016gihn6cxe73pi.eu.auth0.com',
+  clientId: 't7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4',
+  clientSecret: 'seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4',
+  scope: 'sergiusgg01@gmail.com',
+});
+
+router.patch('/api/user/:userId', auth0Middleware, async (req, res) => {
+  const userId = req.params.userId;
+  const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
+
+  try {
+    // Update user profile in Auth0
+    await req.auth0.updateUser({
+      id: userId,
+      user_metadata: { weight, height, levelOfActivity, age, fitnessGoal },
+    });
+
+    // Update user profile in database (if using one)
+    // ...
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
 router.post("/postDate", async (req, res) => {
