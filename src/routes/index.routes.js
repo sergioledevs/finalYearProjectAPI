@@ -3,12 +3,41 @@ const { connection } = require("mongoose");
 const router = express.Router();
 const connections = require("../dbConnection/connection");
 const auth0 = require('auth0');
+const { ManagementClient } = require('auth0');
 
 const controllerIndex = require("../controllers/getUserInfo.controllers");
 const getRecipesIndex = require("../controllers/getRecipes.controllers");
 const getIngredientsIndex= require("../controllers/getIngredients.controller")
 const UserInfoModel = require("../models/userInfo.model");
 const RecipesModel = require("../models/recipes.model");
+
+
+
+const auth02 = new ManagementClient({
+  domain: 'dev-s016gihn6cxe73pi.eu.auth0.com',
+  clientId: 't7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4',
+  clientSecret: 'seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4',
+  scope: 'sergiusgg01@gmail.com',
+});
+
+router.patch('/api/user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
+
+  try {
+    // Update user profile in Auth0
+    await auth02.updateUserMetadata({ id: userId }, { weight, height, levelOfActivity, age, fitnessGoal });
+
+    // Update user profile in database (if using one)
+    // ...
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 
 router.get("/getDatabase", controllerIndex.index);
 
@@ -36,31 +65,6 @@ router.post("/getDatabase", (req, res) => {
     }
     return res.status(200).send({ booking: BookingStored });
   });
-});
-
-const auth02 = new ManagementClient({
-  domain: 'dev-s016gihn6cxe73pi.eu.auth0.com',
-  clientId: 't7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4',
-  clientSecret: 'seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4',
-  scope: 'sergiusgg01@gmail.com',
-});
-
-router.patch('/api/user/:userId', async (req, res) => {
-  const userId = req.params.userId;
-  const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
-
-  try {
-    // Update user profile in Auth0
-    await auth02.updateUserMetadata({ id: userId }, { weight, height, levelOfActivity, age, fitnessGoal });
-
-    // Update user profile in database (if using one)
-    // ...
-
-    res.sendStatus(200);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
 });
 
 router.post("/postDate", async (req, res) => {
