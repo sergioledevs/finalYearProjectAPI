@@ -2,7 +2,6 @@ const express = require("express");
 const { connection } = require("mongoose");
 const router = express.Router();
 const connections = require("../dbConnection/connection");
-const auth0 = require('auth0');
 const { ManagementClient } = require('auth0');
 
 const controllerIndex = require("../controllers/getUserInfo.controllers");
@@ -11,7 +10,14 @@ const getIngredientsIndex= require("../controllers/getIngredients.controller")
 const UserInfoModel = require("../models/userInfo.model");
 const RecipesModel = require("../models/recipes.model");
 
+const { auth, requiredScopes } = require('express-oauth2-jwt-bearer');
 
+// Authorization middleware. When used, the Access Token must
+// exist and be verified against the Auth0 JSON Web Key Set.
+const checkJwt = auth({
+  audience: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/',
+  issuerBaseURL: `https://cukfit.netlify.app/`,
+});
 
 const auth02 = new ManagementClient({
   domain: 'dev-s016gihn6cxe73pi.eu.auth0.com',
@@ -20,7 +26,7 @@ const auth02 = new ManagementClient({
   scope: 'sergiusgg01@gmail.com',
 });
 
-router.patch('/api/user/:userId', async (req, res) => {
+router.patch('/api/user/:userId', checkJwt, async (req, res) => {
   const userId = req.params.userId;
   const { weight, height, levelOfActivity, age, fitnessGoal } = req.body;
   console.log(req.params);
