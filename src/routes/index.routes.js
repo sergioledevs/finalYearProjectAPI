@@ -10,15 +10,15 @@ const getIngredientsIndex = require("../controllers/getIngredients.controller");
 const UserInfoModel = require("../models/userInfo.model");
 const RecipesModel = require("../models/recipes.model");
 
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
 
 // Define the options for the auth() middleware function
 const jwtOptions = {
-  audience: 'https://finalyearprojectapi.onrender.com',
-  issuerBaseURL: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/',
-  tokenSigningAlg: 'RS256'
+  audience: "https://finalyearprojectapi.onrender.com",
+  issuerBaseURL: "https://dev-s016gihn6cxe73pi.eu.auth0.com/",
+  tokenSigningAlg: "RS256",
 };
 
 // Authorization middleware. When used, the Access Token must
@@ -29,9 +29,13 @@ const checkScopes = requiredScopes("update:users_app_metadata");
 const auth02 = new ManagementClient({
   domain: "dev-s016gihn6cxe73pi.eu.auth0.com",
   clientId: "t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4",
-  clientSecret:
-    "seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
+  clientSecret:"seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
   scope: "update:users_app_metadata",
+  audience: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/',
+  tokenProvider: {
+    enableCache: true,
+    cacheTTLInSeconds: 10
+  }
 });
 
 router.patch("/api/user/:userId", checkJwt, checkScopes, async (req, res) => {
@@ -51,7 +55,6 @@ router.patch("/api/user/:userId", checkJwt, checkScopes, async (req, res) => {
     res.sendStatus(500);
   }
 });
-
 
 router.get("/getDatabase", controllerIndex.index);
 
