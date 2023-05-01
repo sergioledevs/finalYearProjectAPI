@@ -26,13 +26,12 @@ const jwtOptions = {
 const checkJwt = auth(jwtOptions);
 const checkScopes = requiredScopes("update:users_app_metadata");
 
-
 const auth02 = new ManagementClient({
   domain: "dev-s016gihn6cxe73pi.eu.auth0.com",
   clientId: "t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4",
   clientSecret:
     "seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
-  scope: "sergiusgg01@gmail.com",
+  scope: "update:users_app_metadata",
 });
 
 router.patch("/api/user/:userId", checkJwt, checkScopes, async (req, res) => {
@@ -46,10 +45,6 @@ router.patch("/api/user/:userId", checkJwt, checkScopes, async (req, res) => {
       { id: userId },
       { weight, height, levelOfActivity, age, fitnessGoal }
     );
-
-    // Update user profile in database (if using one)
-    // ...
-
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
