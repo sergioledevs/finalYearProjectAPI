@@ -10,18 +10,22 @@ const getIngredientsIndex = require("../controllers/getIngredients.controller");
 const UserInfoModel = require("../models/userInfo.model");
 const RecipesModel = require("../models/recipes.model");
 
+const jwt = require('jsonwebtoken');
+
 const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
 
 // Define the options for the auth() middleware function
 const jwtOptions = {
-  audience: "https://finalyearprojectapi.onrender.com",
-  issuerBaseURL: "https://dev-s016gihn6cxe73pi.eu.auth0.com",
+  audience: 'https://finalyearprojectapi.onrender.com',
+  issuerBaseURL: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/',
+  tokenSigningAlg: 'RS256'
 };
 
 // Authorization middleware. When used, the Access Token must
 // exist and be verified against the Auth0 JSON Web Key Set.
 const checkJwt = auth(jwtOptions);
 const checkScopes = requiredScopes("update:users_app_metadata");
+
 
 const auth02 = new ManagementClient({
   domain: "dev-s016gihn6cxe73pi.eu.auth0.com",
