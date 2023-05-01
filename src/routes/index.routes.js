@@ -16,9 +16,10 @@ const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
 
 // Define the options for the auth() middleware function
 const jwtOptions = {
-  audience: "https://finalyearprojectapi.onrender.com",
-  issuerBaseURL: "https://dev-s016gihn6cxe73pi.eu.auth0.com/",
-  tokenSigningAlg: "RS256",
+  method: "POST",
+  url: "https://dev-s016gihn6cxe73pi.eu.auth0.com/oauth/token",
+  headers: { "content-type": "application/json" },
+  body: '{"client_id":"t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4","client_secret":"ppYRV_zUVoAiR1DRcBucq6X5oR_rgf4GbR70bkXI25GXpV6jmMxFblUDWArZ0FKE","audience":"https://finalyearprojectapi.onrender.com","grant_type":"client_credentials"}',
 };
 
 // Authorization middleware. When used, the Access Token must
@@ -29,13 +30,14 @@ const checkScopes = requiredScopes("update:users_app_metadata");
 const auth02 = new ManagementClient({
   domain: "dev-s016gihn6cxe73pi.eu.auth0.com",
   clientId: "t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4",
-  clientSecret:"seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
+  clientSecret:
+    "seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
   scope: "update:users_app_metadata",
-  audience: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/',
+  audience: "https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/",
   tokenProvider: {
     enableCache: true,
-    cacheTTLInSeconds: 10
-  }
+    cacheTTLInSeconds: 10,
+  },
 });
 
 router.patch("/api/user/:userId", checkJwt, checkScopes, async (req, res) => {
