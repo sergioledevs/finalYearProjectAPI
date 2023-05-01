@@ -28,7 +28,7 @@ const checkScopes = requiredScopes("update:users_app_metadata");
 
 const auth02 = new ManagementClient({
   domain: "dev-s016gihn6cxe73pi.eu.auth0.com",
-  clientId: "OhnV8tqUqq4s4bZSDm46DRbQrFAgsobE",
+  clientId: "t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4",
   clientSecret:"seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
   scope: "update:users_app_metadata",
   audience: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/',
