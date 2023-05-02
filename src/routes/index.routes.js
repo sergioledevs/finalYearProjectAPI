@@ -31,7 +31,7 @@ const auth02 = new ManagementClient({
   clientId: "t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4",
   clientSecret:"seyb2qec8-RYMeGkZyGbLlwanLV3d_Inn95yKrJaBRqOW5aB4L5g-Dg4Nc-7f3r4",
   scope: "update:users_app_metadata",
-  audience: 'https://dev-s016gihn6cxe73pi.eu.auth0.com/api/v2/',
+  audience: 'https://finalyearprojectapi.onrender.com',
   tokenProvider: {
    enableCache: true,
    cacheTTLInSeconds: 10
