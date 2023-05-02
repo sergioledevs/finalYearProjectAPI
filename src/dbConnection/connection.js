@@ -4,5 +4,8 @@ const mongoose = require('mongoose');
 const password='SergioMongo'
 const dbname='fitAppUserInfo'
 const uri= `mongodb+srv://Sergioglz:${password}@cluster0.p2ybn.mongodb.net/${dbname}?retryWrites=true&w=majority`
-module.exports= () => mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology:true})
+module.exports= () => mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology:true}, 
+    () => {
+      console.log('Connected to MongoDB');
+    })
 
