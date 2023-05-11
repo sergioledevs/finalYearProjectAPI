@@ -292,7 +292,10 @@ const authMiddleware = (req, res, next) => {
 
 router.get("/getDatabase", authMiddleware, controllerIndex.index);
 
-router.get("/getRecipes", getRecipesIndex.getRecipes);
+router.get("/getRecipes", (req, res) => {
+  res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+  getRecipesIndex.getRecipes(req, res);
+});
 
 router.get(
   "/getIngredients",
