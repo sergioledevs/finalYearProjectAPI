@@ -292,7 +292,7 @@ const authMiddleware = (req, res, next) => {
 
 router.get("/getDatabase", authMiddleware, controllerIndex.index);
 
-router.get("/getRecipes", authMiddleware, getRecipesIndex.getRecipes);
+router.get("/getRecipes", getRecipesIndex.getRecipes);
 
 router.get(
   "/getIngredients",
