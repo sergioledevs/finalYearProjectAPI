@@ -38,6 +38,22 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  calorieIntake: {
+    type: String,
+    required: false,
+  },
+  userGoal: {
+    type: String,
+    required: false,
+  },
+  proteinIntake: {
+    type: String,
+    required: false,
+  },
+  carbsIntake: {
+    type: String,
+    required: false,
+  },
   recipesUsed: {
     type: Array,
     required: false,
@@ -46,10 +62,15 @@ const userSchema = new Schema({
     type: Array,
     required: false,
   },
-  alergicTo: {
+  weeklyPlan: {
     type: Array,
     required: false,
   },
+  allergicTo: {
+    type: Array,
+    required: false,
+  },
+  
   ingredientPreference: {
     type: Array,
     required: false,

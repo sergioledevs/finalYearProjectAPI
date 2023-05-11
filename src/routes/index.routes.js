@@ -103,9 +103,19 @@ router.post("/userData", async (req, res) => {
   await connections();
   const secretOrPrivateKey = "mysecretkey";
 
-  console.log(req.body)
+  console.log(req.body);
 
-  const { height, weight, levelOfActive, age, accessToken } = req.body;
+  const {
+    height,
+    weight,
+    levelOfActive,
+    age,
+    accessToken,
+    userGoal,
+    calorieIntake,
+    proteinIntake,
+    carbsIntake,
+  } = req.body;
   try {
     const decoded = jwt.verify(accessToken, secretOrPrivateKey);
     const userId = decoded.userId;
@@ -113,7 +123,7 @@ router.post("/userData", async (req, res) => {
     // Update the user data associated with the userId
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { height, weight, levelOfActive, age },
+      { height, weight, levelOfActive, age, userGoal, calorieIntake, proteinIntake, carbsIntake },
       { new: true }
     );
 
@@ -135,11 +145,126 @@ router.get("/userData", async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
-    const { height, weight, age, levelOfActive, email } = user;
-    console.log(levelOfActive)
-    res.status(200).json({ success: true, data: { height, weight, age, levelOfActive, email } });
+    const { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake } = user;
+    res.status(200).json({
+      success: true,
+      data: { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ success: false, message: "Invalid token" });
+  }
+});
+
+router.post("/saveCalendarData", async (req, res) => {
+  await connections();
+  const token = req.body.token;
+  const weeklyPlan = req.body.selectedRecipes;
+
+  const secretOrPrivateKey = "mysecretkey";
+
+  try {
+    const decoded = jwt.verify(token, secretOrPrivateKey);
+    const userId = decoded.userId;
+
+    if (!userId) {
+      return res.status(401).send({ error: "Invalid token" });
+    }
+
+    // store selected recipes for user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { weeklyPlan },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, updatedUser });
+    console.log(userId, weeklyPlan);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+router.get("/getCalendarData", async (req, res) => {
+  await connections();
+  const secretOrPrivateKey = "mysecretkey";
+  const accessToken = req.headers.authorization.split(" ")[1];
+  try {
+    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    const { weeklyPlan } = user;
+    res.status(200).json({
+      success: true,
+      data: { weeklyPlan },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ success: false, message: "Invalid token" });
+  }
+});
+
+router.post("/saveAllergies", async (req, res) => {
+  await connections();
+  const token = req.body.token;
+  const allergicTo = req.body.arrayAllergies;
+
+  const secretOrPrivateKey = "mysecretkey";
+
+  try {
+    const decoded = jwt.verify(token, secretOrPrivateKey);
+    const userId = decoded.userId;
+
+    if (!userId) {
+      return res.status(401).send({ error: "Invalid token" });
+    }
+
+    // store selected recipes for user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { allergicTo },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+router.get("/getAllergies", async (req, res) => {
+  await connections();
+  const secretOrPrivateKey = "mysecretkey";
+  const accessToken = req.headers.authorization.split(" ")[1];
+  try {
+    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    const { allergicTo } = user;
+    res.status(200).json({
+      success: true,
+      data: { allergicTo },
+    });
   } catch (err) {
     console.error(err);
     res.status(401).json({ success: false, message: "Invalid token" });
