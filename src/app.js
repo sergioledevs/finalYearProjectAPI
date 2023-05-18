@@ -7,8 +7,14 @@ const cors = require('cors');
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 
-const corsOptions = {
-   origin: 'https://cukfit.netlify.app',
+const allowedOrigins = [
+   'https://cukfit.netlify.app',
+   'http://example.com',
+   'http://localhost:3000'
+ ];
+ 
+ const corsOptions = {
+   origin: allowedOrigins
  };
  
  app.use(cors(corsOptions));
