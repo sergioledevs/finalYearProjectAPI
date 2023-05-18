@@ -54,14 +54,6 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
-  recipesUsed: {
-    type: Array,
-    required: false,
-  },
-  favoriteRecipes: {
-    type: Array,
-    required: false,
-  },
   weeklyPlan: {
     type: Array,
     required: false,
@@ -71,10 +63,6 @@ const userSchema = new Schema({
     required: false,
   },
   
-  ingredientPreference: {
-    type: Array,
-    required: false,
-  },
 });
 
 const User = mongoose.model("info", userSchema);

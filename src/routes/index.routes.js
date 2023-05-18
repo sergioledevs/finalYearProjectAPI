@@ -18,9 +18,6 @@ router.post("/register", async (req, res) => {
     await connections();
     const { email, password, confirmPassword } = req.body;
 
-    console.log(req.body);
-    console.log(password);
-
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -32,7 +29,6 @@ router.post("/register", async (req, res) => {
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
-
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -325,32 +321,6 @@ router.post("/getDatabase", (req, res) => {
   });
 });
 
-router.post("/postDate", async (req, res) => {
-  try {
-    const updateDocument = {
-      $set: { dates_booked: "dateTitle" },
-    };
-    await connections();
-    await BookingModel.findOneAndUpdate({ name: req.name }, { updateDocument });
-    return res.status(200).send("success");
-  } catch (err) {
-    console.error(err);
-  }
-});
 
-router.put("/personalInfo", async (req, res) => {
-  try {
-    console.log({ body: req.body });
-    await BookingModel.findOneAndUpdate(
-      { name: req.body.previousName },
-      {
-        name: req.body.newName,
-      }
-    );
-    return res.status(200).send({ previousName: "fede", newName: "jose" });
-  } catch (err) {
-    console.error(err);
-  }
-});
 
 module.exports = router;
