@@ -289,7 +289,7 @@ const authMiddleware = (req, res, next) => {
 router.get("/getDatabase", authMiddleware, controllerIndex.index);
 
 router.get("/getRecipes", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "https://cukfit.netlify.app");
+
   getRecipesIndex.getRecipes(req, res);
 });
 
