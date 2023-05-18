@@ -9,7 +9,6 @@ app.use(express.urlencoded({ extended: false }));
 
 const corsOptions = {
    origin: 'https://cukfit.netlify.app',
-   origin: "http://localhost:3000",
  };
  
  app.use(cors(corsOptions));
