@@ -111,6 +111,7 @@ router.post("/userData", async (req, res) => {
     calorieIntake,
     proteinIntake,
     carbsIntake,
+    allergicTo
   } = req.body;
   try {
     const decoded = jwt.verify(accessToken, secretOrPrivateKey);
@@ -119,7 +120,7 @@ router.post("/userData", async (req, res) => {
     // Update the user data associated with the userId
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { height, weight, levelOfActive, age, userGoal, calorieIntake, proteinIntake, carbsIntake },
+      { height, weight, levelOfActive, age, userGoal, calorieIntake, proteinIntake, carbsIntake, allergicTo },
       { new: true }
     );
 
@@ -315,7 +316,7 @@ router.post("/getDatabase", (req, res) => {
     if (err) {
       return res
         .status(500)
-        .send({ message: `Error al salvar la base de datos: ${err}` });
+        .send({ message: `Error saving database: ${err}` });
     }
     return res.status(200).send({ booking: BookingStored });
   });
