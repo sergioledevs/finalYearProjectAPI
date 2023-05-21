@@ -146,10 +146,10 @@ router.get("/userData", async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    const { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake } = user;
+    const { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo } = user;
     res.status(200).json({
       success: true,
-      data: { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake },
+      data: { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo },
     });
   } catch (err) {
     console.error(err);
