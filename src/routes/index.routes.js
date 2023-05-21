@@ -111,7 +111,8 @@ router.post("/userData", async (req, res) => {
     calorieIntake,
     proteinIntake,
     carbsIntake,
-    allergicTo
+    allergicTo,
+    gender
   } = req.body;
   try {
     const decoded = jwt.verify(accessToken, secretOrPrivateKey);
@@ -120,7 +121,7 @@ router.post("/userData", async (req, res) => {
     // Update the user data associated with the userId
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { height, weight, levelOfActive, age, userGoal, calorieIntake, proteinIntake, carbsIntake, allergicTo },
+      { height, weight, levelOfActive, age, userGoal, calorieIntake, proteinIntake, carbsIntake, allergicTo, gender },
       { new: true }
     );
 
@@ -146,10 +147,10 @@ router.get("/userData", async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    const { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo } = user;
+    const { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo, gender } = user;
     res.status(200).json({
       success: true,
-      data: { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo },
+      data: { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo, gender },
     });
   } catch (err) {
     console.error(err);
