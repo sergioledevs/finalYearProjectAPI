@@ -5,9 +5,8 @@ const IngredientsModel = require("../models/ingredients.model");
 controller.getIngredients = async (req, res) => {
   try {
     await connection();
-    const allBookings = await IngredientsModel.find();
-    console.log(allBookings);
-    res.send(allBookings);
+    const allIngredients = await IngredientsModel.find();
+    res.send(allIngredients);
   } catch (err) {
     console.error(err);
   }

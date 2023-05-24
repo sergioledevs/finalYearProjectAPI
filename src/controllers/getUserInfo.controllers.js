@@ -6,7 +6,6 @@ controller.index = async (req, res) => {
   try {
     await connection();
     const userInfo = await UserModel.find();
-    console.log(userInfo);
     res.send(userInfo);
   } catch (err) {
     console.error(err);

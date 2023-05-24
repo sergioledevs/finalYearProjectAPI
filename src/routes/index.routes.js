@@ -13,6 +13,11 @@ const getIngredientsIndex = require("../controllers/getIngredients.controller");
 const User = require("../models/userInfo.model");
 const RecipesModel = require("../models/recipes.model");
 
+
+
+
+
+
 router.post("/register", async (req, res) => {
   try {
     await connections();
@@ -52,6 +57,12 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+
+
+
+
+
+
 
 router.post("/login", async (req, res) => {
   try {
@@ -95,12 +106,18 @@ router.post("/logout", (req, res) => {
   });
 });
 
+
+
+
+
+
+
 router.post("/userData", async (req, res) => {
-  await connections();
-  const secretOrPrivateKey = "mysecretkey";
+  await connections(); // Establish a connection to the database
 
-  console.log(req.body);
+  const secretOrPrivateKey = "mysecretkey"; // Secret key used for JWT token verification
 
+  // Destructure the required fields from the request body
   const {
     height,
     weight,
@@ -112,74 +129,146 @@ router.post("/userData", async (req, res) => {
     proteinIntake,
     carbsIntake,
     allergicTo,
-    gender
+    gender,
   } = req.body;
-  try {
-    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
-    const userId = decoded.userId;
 
-    // Update the user data associated with the userId
+  try {
+    // Verify the access token using the secret key
+    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
+
+    const userId = decoded.userId; // Extract the user ID from the decoded token
+
+    // Update the user data associated with the userId in the database
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { height, weight, levelOfActive, age, userGoal, calorieIntake, proteinIntake, carbsIntake, allergicTo, gender },
-      { new: true }
+      {
+        height,
+        weight,
+        levelOfActive,
+        age,
+        userGoal,
+        calorieIntake,
+        proteinIntake,
+        carbsIntake,
+        allergicTo,
+        gender,
+      },
+      { new: true } // Return the updated user document
     );
 
+    // Respond with a success status and the updated user object
     res.status(200).json({ success: true, updatedUser });
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log any errors to the console
+
+    // Respond with an unauthorized status and an error message
     res.status(401).json({ success: false, message: "Invalid token" });
   }
 });
 
-router.get("/userData", async (req, res) => {
-  await connections();
-  const secretOrPrivateKey = "mysecretkey";
-  const accessToken = req.headers.authorization.split(" ")[1];
-  try {
-    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
-    const userId = decoded.userId;
 
+
+
+
+
+router.get("/userData", async (req, res) => {
+  await connections(); // Establish a connection to the database
+
+  const secretOrPrivateKey = "mysecretkey"; // Secret key used for JWT token verification
+
+  const accessToken = req.headers.authorization.split(" ")[1]; // Extract the access token from the authorization header
+
+  try {
+    // Verify the access token using the secret key
+    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
+
+    const userId = decoded.userId; // Extract the user ID from the decoded token
+
+    // Find the user data associated with the userId in the database
     const user = await User.findById(userId);
 
+    // If the user is not found, respond with a not found status and an error message
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    const { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo, gender } = user;
+
+    // Destructure the user object to extract required fields
+    const {
+      height,
+      weight,
+      age,
+      levelOfActive,
+      userGoal,
+      email,
+      calorieIntake,
+      carbsIntake,
+      proteinIntake,
+      allergicTo,
+      gender,
+    } = user;
+
+    // Respond with a success status and the user data
     res.status(200).json({
       success: true,
-      data: { height, weight, age, levelOfActive, userGoal, email, calorieIntake, carbsIntake, proteinIntake, allergicTo, gender },
+      data: {
+        height,
+        weight,
+        age,
+        levelOfActive,
+        userGoal,
+        email,
+        calorieIntake,
+        carbsIntake,
+        proteinIntake,
+        allergicTo,
+        gender,
+      },
     });
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log any errors to the console
+
+    // Respond with an unauthorized status and an error message
     res.status(401).json({ success: false, message: "Invalid token" });
   }
 });
 
+
+
+
+
+
+
 router.post("/saveCalendarData", async (req, res) => {
+  // Establish database connection
   await connections();
+
+  // Retrieve the token and selected recipes from the request body
   const token = req.body.token;
   const weeklyPlan = req.body.selectedRecipes;
 
+  // Set the secret or private key for JWT verification
   const secretOrPrivateKey = "mysecretkey";
 
   try {
+    // Verify the token using the secret or private key
     const decoded = jwt.verify(token, secretOrPrivateKey);
     const userId = decoded.userId;
 
+    // Check if the decoded token contains a valid user ID
     if (!userId) {
       return res.status(401).send({ error: "Invalid token" });
     }
 
-    // store selected recipes for user
+    // Update the user's selected recipes in the database
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { weeklyPlan },
       { new: true }
     );
 
+    // Respond with a success status and the updated user object
     res.status(200).json({ success: true, updatedUser });
     console.log(userId, weeklyPlan);
   } catch (err) {
@@ -188,87 +277,139 @@ router.post("/saveCalendarData", async (req, res) => {
   }
 });
 
-router.get("/getCalendarData", async (req, res) => {
-  await connections();
-  const secretOrPrivateKey = "mysecretkey";
-  const accessToken = req.headers.authorization.split(" ")[1];
-  try {
-    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
-    const userId = decoded.userId;
 
+
+
+
+
+router.get("/getCalendarData", async (req, res) => {
+  await connections(); // Establish a connection to the database 
+
+  const secretOrPrivateKey = "mysecretkey"; // Secret key used for JWT token verification
+
+  const accessToken = req.headers.authorization.split(" ")[1]; // Extract the access token from the authorization header
+
+  try {
+    // Verify the access token using the secret key
+    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
+
+    const userId = decoded.userId; // Extract the user ID from the decoded token
+
+    // Find the user data associated with the userId in the database
     const user = await User.findById(userId);
 
+    // If the user is not found, respond with a not found status and an error message
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    const { weeklyPlan } = user;
+
+    const { weeklyPlan } = user; // Extract the weeklyPlan field from the user object
+
+    // Respond with a success status and the weekly plan data
     res.status(200).json({
       success: true,
       data: { weeklyPlan },
     });
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log any errors to the console
+
+    // Respond with an unauthorized status and an error message
     res.status(401).json({ success: false, message: "Invalid token" });
   }
 });
 
-router.post("/saveAllergies", async (req, res) => {
-  await connections();
-  const token = req.body.token;
-  const allergicTo = req.body.arrayAllergies;
 
-  const secretOrPrivateKey = "mysecretkey";
+
+
+
+
+
+
+router.post("/saveAllergies", async (req, res) => {
+  await connections(); // Establish a connection to the database (assuming connections() is a function for that)
+
+  const token = req.body.token; // Extract the token from the request body
+  const allergicTo = req.body.arrayAllergies; // Extract the array of allergies from the request body
+
+  const secretOrPrivateKey = "mysecretkey"; // Secret key used for JWT token verification
 
   try {
+    // Verify the token using the secret key
     const decoded = jwt.verify(token, secretOrPrivateKey);
-    const userId = decoded.userId;
+    const userId = decoded.userId; // Extract the user ID from the decoded token
 
     if (!userId) {
+      // If the user ID is not valid, respond with an unauthorized status and an error message
       return res.status(401).send({ error: "Invalid token" });
     }
 
-    // store selected recipes for user
+    // Update the allergicTo field for the user in the database
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { allergicTo },
-      { new: true }
+      { new: true } // Return the updated user document
     );
 
+    // Respond with a success status and the updated user object
     res.status(200).json({ success: true, updatedUser });
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log any errors to the console
+
+    // Respond with a server error status and an error message
     res.status(500).json({ success: false, message: "Server Error" });
   }
 });
 
-router.get("/getAllergies", async (req, res) => {
-  await connections();
-  const secretOrPrivateKey = "mysecretkey";
-  const accessToken = req.headers.authorization.split(" ")[1];
-  try {
-    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
-    const userId = decoded.userId;
 
+
+
+
+
+
+router.get("/getAllergies", async (req, res) => {
+  await connections(); // Establish a connection to the database
+
+  const secretOrPrivateKey = "mysecretkey"; // Secret key used for JWT token verification
+
+  const accessToken = req.headers.authorization.split(" ")[1]; // Extract the access token from the authorization header
+
+  try {
+    // Verify the access token using the secret key
+    const decoded = jwt.verify(accessToken, secretOrPrivateKey);
+
+    const userId = decoded.userId; // Extract the user ID from the decoded token
+
+    // Find the user data associated with the userId in the database
     const user = await User.findById(userId);
 
+    // If the user is not found, respond with a not found status and an error message
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    const { allergicTo } = user;
+
+    const { allergicTo } = user; // Extract the allergicTo field from the user object
+
+    // Respond with a success status and the allergicTo data
     res.status(200).json({
       success: true,
       data: { allergicTo },
     });
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log any errors to the console
+
+    // Respond with an unauthorized status and an error message
     res.status(401).json({ success: false, message: "Invalid token" });
   }
 });
 
+
+
+
+//middleware in case some page need previous authorization to access it
 const authMiddleware = (req, res, next) => {
   const token = req.header("Authorization");
 
@@ -288,41 +429,15 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-router.get("/getDatabase", authMiddleware, controllerIndex.index);
+
+
+
+router.get("/getDatabase", controllerIndex.index);
 
 router.get("/getRecipes", (req, res) => {
-
   getRecipesIndex.getRecipes(req, res);
 });
 
-router.get(
-  "/getIngredients",
-  authMiddleware,
-  getIngredientsIndex.getIngredients
-);
-
-router.post("/getDatabase", (req, res) => {
-  console.log(req.body);
-
-  let booking = new User();
-  let hello = new RecipesModel();
-
-  booking.weight = req.body.weight;
-  booking.height = req.body.height;
-  booking.levelOfActivity = req.body.levelOfActive;
-  booking.age = req.body.age;
-  booking.fitnessGoal = req.body.userGoal;
-
-  booking.save((err, BookingStored) => {
-    if (err) {
-      return res
-        .status(500)
-        .send({ message: `Error saving database: ${err}` });
-    }
-    return res.status(200).send({ booking: BookingStored });
-  });
-});
-
-
+router.get("/getIngredients", getIngredientsIndex.getIngredients);
 
 module.exports = router;

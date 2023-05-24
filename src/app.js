@@ -9,7 +9,6 @@ app.use(express.urlencoded({ extended: false }));
 
 const allowedOrigins = [
    'https://cukfit.netlify.app',
-   'http://example.com',
    'http://localhost:3000'
  ];
  
@@ -21,13 +20,10 @@ const allowedOrigins = [
 
 app.use((req, res, next) => {
 
-    // Dominio que tengan acceso (ej. 'http://example.com')
        res.setHeader('Access-Control-Allow-Origin', '*');
     
-    // Metodos de solicitud que deseas permitir
        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     
-    // Encabecedados que permites (ej. 'X-Requested-With,content-type')
        res.setHeader('Access-Control-Allow-Headers', '*');
     
     next();

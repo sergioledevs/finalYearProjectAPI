@@ -16,7 +16,6 @@ controller.getRecipes = async (req, res) => {
         },
       },
     ])
-    console.log(recipes);
     res.send(recipes);
   } catch (err) {
     console.error(err);
