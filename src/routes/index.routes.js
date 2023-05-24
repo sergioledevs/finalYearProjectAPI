@@ -20,7 +20,7 @@ const RecipesModel = require("../models/recipes.model");
 
 router.post("/register", async (req, res) => {
   try {
-    await connections();
+    await connections(); // Establish a connection to the database
     const { email, password, confirmPassword } = req.body;
 
     // Check if user already exists
@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    await connections();
+    await connections(); // Establish a connection to the database
 
     // Check if user exists
     const user = await User.findOne({ email });
@@ -105,6 +105,7 @@ router.post("/logout", (req, res) => {
     res.status(200).send({ message: "Logged out successfully" });
   });
 });
+
 
 
 

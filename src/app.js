@@ -15,7 +15,6 @@ const allowedOrigins = [
  const corsOptions = {
    origin: allowedOrigins
  };
- 
  app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
